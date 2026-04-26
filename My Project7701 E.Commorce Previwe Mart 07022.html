@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ultimate E-Commerce</title>
+  <style>
+    body { font-family: Arial; margin:0; background:#f1f3f6; }
+
+    header {
+      background:#9bcad9;
+      color:rgb(30, 46, 4);
+      padding:15px;
+      text-align:center;
+      font-size:22px;
+    }
+
+    .topbar {
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      padding:10px;
+      background:rgb(15, 29, 35);
+    }
+
+    .search { padding:8px; width:200px; }
+
+    .avatar {
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      cursor:pointer;
+    }
+
+    .container {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .card {
+      background:white;
+      width:220px;
+      margin:15px;
+      padding:15px;
+      text-align:center;
+      border-radius:10px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    img { width:180px; height:180px; }
+
+    button {
+      background:#e68907;
+      border:none;
+      padding:8px;
+      color:white;
+      cursor:pointer;
+      margin:5px;
+      border-radius:5px;
+    }
+
+    .whatsapp { background:#000502; }
+
+    .section {
+      display:none;
+      padding:20px;
+      background:rgb(125, 200, 97);
+      margin:20px;
+      border-radius:10px;
+    }
+
+    input { padding:8px; margin:5px; width:200px; }
+
+    .rating span { font-size:20px; cursor:pointer; }
+  </style>
+
+<script>
+let cartProduct = "";
+let price = "";
+
+// navigation
+function showSection(id){
+  document.querySelectorAll(".section").forEach(s=>s.style.display="none");
+  document.getElementById(id).style.display="block";
+}
+
+// product details
+function viewDetails(product){
+  let desc="", p="";
+  if(product=="Smartphone"){ desc="6GB RAM | 128GB"; p="15000";}
+  if(product=="T-Shirt"){ desc="100% Cotton"; p="500";}
+  if(product=="Book"){ desc="Learn Coding"; p="800";}
+
+  document.getElementById("detailName").innerText = product;
+  document.getElementById("detailDesc").innerText = desc;
+  document.getElementById("detailPrice").innerText = "₹"+p;
+
+  price = p;
+  updateWhatsAppLink(product);
+  showSection("details");
+}
+
+// cart
+function addToCart(){
+  cartProduct = document.getElementById("detailName").innerText;
+  document.getElementById("cartItem").innerText = cartProduct;
+  document.getElementById("cartPrice").innerText = "₹"+price;
+  showSection("cart");
+}
+
+// payment
+function checkout(){ showSection("payment"); }
+function payNow(){ showSection("success"); }
+
+// rating
+function rate(star){ alert("You rated: " + star + " ⭐"); }
+
+// search
+function searchProduct(){
+  let input = document.getElementById("search").value.toLowerCase();
+  document.querySelectorAll(".card").forEach(card=>{
+    let text = card.innerText.toLowerCase();
+    card.style.display = text.includes(input) ? "block" : "none";
+  });
+}
+
+// wishlist
+function addWishlist(product){
+  alert(product + " added to Wishlist ❤️");
+}
+
+// whatsapp
+function updateWhatsAppLink(product){
+  let msg = "I want to buy " + product;
+  document.getElementById("waLink").href =
+    "https://wa.me/918081923899?text=" + encodeURIComponent(msg);
+}
+
+// profile save
+function saveProfile(){
+  let name = document.getElementById("name").value;
+  let email = document.getElementById("email").value;
+  let address = document.getElementById("address").value;
+
+  localStorage.setItem("name", name);
+  localStorage.setItem("email", email);
+  localStorage.setItem("address", address);
+
+  let file = document.getElementById("photo").files[0];
+
+  if(file){
+    let reader = new FileReader();
+    reader.onload = function(){
+      localStorage.setItem("photo", reader.result);
+      document.getElementById("avatar").src = reader.result;
+    }
+    reader.readAsDataURL(file);
+  }
+
+  alert("Profile Saved ✅");
+}
+
+// load profile
+function loadProfile(){
+  let photo = localStorage.getItem("photo");
+  if(photo){
+    document.getElementById("avatar").src = photo;
+  }
+}
+
+window.onload = loadProfile;
+</script>
+
+</head>
+
+<body>
+
+<header> <h3>PREVIEW MART ANALYZE</h3>🛒</header>
+
+<div class="topbar">
+  <button onclick="showSection('home')">Home</button>
+  <input id="search" class="search" onkeyup="searchProduct()" placeholder="Search...">
+  
+  <img id="avatar" src="https://via.placeholder.com/40"
+  class="avatar" onclick="showSection('profile')">
+</div>
+
+<!-- HOME -->
+<div id="home" class="container">
+
+  <div class="card">
+    <h3>Smartphone</h3>
+    <img src="https://lh3.googleusercontent.com/uNCdyAlc3lbhSlqWCJQOOSov4Yd4uZKM24JNtRO9lpjumewm_Uv2_-xPP6P_NnWClLR5tc5FEAW5puzbRmXRXxDDZ7iB6Q6l0p2OTw=e365-pa-nu-s0">
+    <p>₹15,000</p>
+    <button onclick="viewDetails('Smartphone')">View</button>
+    <button onclick="addWishlist('Smartphone')">❤️</button>
+  </div>
+
+  <div class="card">
+    <h3>T-Shirt</h3>
+    <img src="https://airtex.in/cdn/shop/files/Men-stylish-T-Shirt-Navy-blue-White-Turquoise-Blue-with-Red-stripe-Airtex-64887927-_1.jpg?v=1750049598">
+    <p>₹500</p>
+    <button onclick="viewDetails('T-Shirt')">View</button>
+    <button onclick="addWishlist('T-Shirt')">❤️</button>
+  </div>
+
+  <div class="card">
+    <h3>Book</h3>
+    <img src="https://m.media-amazon.com/images/I/51xiwRkS2oL._AC_UF1000,1000_QL80_.jpg">
+    <p>₹800</p>
+    <button onclick="viewDetails('Book')">View</button>
+    <button onclick="addWishlist('Book')">❤️</button>
+  </div>
+
+</div>
+
+<!-- DETAILS -->
+<div id="details" class="section">
+  <h2 id="detailName"></h2>
+  <p id="detailPrice"></p>
+  <p id="detailDesc"></p>
+
+  <div class="rating">
+    Rate:
+    <span onclick="rate(1)">⭐</span>
+    <span onclick="rate(2)">⭐</span>
+    <span onclick="rate(3)">⭐</span>
+    <span onclick="rate(4)">⭐</span>
+    <span onclick="rate(5)">⭐</span>
+  </div>
+
+  <button onclick="addToCart()">Add to Cart</button>
+
+  <a id="waLink" target="_blank">
+    <button class="whatsapp">Order on WhatsApp</button>
+  </a>
+
+  <button onclick="showSection('home')">⬅ Back</button>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="section">
+  <h2>Create Profile</h2>
+
+  <input id="name" placeholder="Name"><br>
+  <input id="email" placeholder="Email"><br>
+  <input id="address" placeholder="Address"><br>
+  <input type="file" id="photo"><br><br>
+
+  <button onclick="saveProfile()">Save Profile</button>
+</div>
+
+<!-- CART -->
+<div id="cart" class="section">
+  <h2>Your Cart</h2>
+  <p>Product: <span id="cartItem"></span></p>
+  <p>Price: <span id="cartPrice"></span></p>
+  <button onclick="checkout()">Proceed to Payment</button>
+</div>
+
+<!-- PAYMENT -->
+<div id="payment" class="section">
+  <h2>Payment</h2>
+  <button onclick="payNow()">UPI</button>
+  <button onclick="payNow()">Card</button>
+  <button onclick="payNow()">COD</button>
+</div>
+
+<!-- SUCCESS -->
+<div id="success" class="section">
+  <h2>🎉 Payment Successful</h2>
+  <p>Your order has been placed!</p>
+  <button onclick="showSection('home')">Back to Home</button>
+</div>
+
+</body>
+</html>
